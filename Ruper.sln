@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ruper.API", "Ruper.API\Ruper.API.csproj", "{74C985BD-2C01-46FD-9909-6A6499AFECE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ruper.DAL", "Ruper.DAL\Ruper.DAL.csproj", "{47A5BC33-4764-4314-AADE-D032ACF26F38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ruper.BLL", "Ruper.BLL\Ruper.BLL.csproj", "{881831B8-480A-4095-BC46-3431D714897A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{74C985BD-2C01-46FD-9909-6A6499AFECE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74C985BD-2C01-46FD-9909-6A6499AFECE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74C985BD-2C01-46FD-9909-6A6499AFECE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74C985BD-2C01-46FD-9909-6A6499AFECE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A5BC33-4764-4314-AADE-D032ACF26F38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A5BC33-4764-4314-AADE-D032ACF26F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A5BC33-4764-4314-AADE-D032ACF26F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A5BC33-4764-4314-AADE-D032ACF26F38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{881831B8-480A-4095-BC46-3431D714897A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{881831B8-480A-4095-BC46-3431D714897A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{881831B8-480A-4095-BC46-3431D714897A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{881831B8-480A-4095-BC46-3431D714897A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {602AD34A-626A-4865-BC0B-439622447215}
+	EndGlobalSection
+EndGlobal
