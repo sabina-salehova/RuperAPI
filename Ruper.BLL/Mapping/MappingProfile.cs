@@ -13,6 +13,10 @@ namespace Ruper.BLL.Mapping
     {
         public MappingProfile()
         {
+            CreateMap<Brand, BrandDto>().ReverseMap();
+            CreateMap<Brand, BrandCreateDto>().ReverseMap();
+            CreateMap<Brand, BrandUpdateDto>().ReverseMap();
+
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryCreateDto>().ReverseMap();
             CreateMap<Category, CategoryUpdateDto>().ReverseMap();
@@ -20,8 +24,6 @@ namespace Ruper.BLL.Mapping
             CreateMap<Slider, SliderDto>().ReverseMap();
             CreateMap<Slider, SliderCreateDto>().ReverseMap();
             CreateMap<Slider, SliderUpdateDto>().ReverseMap();
-
-            //CreateMap<Category, CategoryUpdateDto>().ReverseMap();
         }
     }
 }

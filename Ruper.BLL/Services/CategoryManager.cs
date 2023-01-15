@@ -51,7 +51,7 @@ namespace Ruper.BLL.Services
 
             if (categoryUpdateDto.Image is not null)
             {
-                var forderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Slider");
+                var forderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Category");
                 var existImageName = Path.Combine(forderPath, existCategory.ImageName);
 
                 if (File.Exists(existImageName))

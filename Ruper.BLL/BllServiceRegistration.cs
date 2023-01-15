@@ -11,6 +11,9 @@ namespace Ruper.BLL
     {
         public static IServiceCollection AddBllServices(this IServiceCollection services)
         {
+            services.AddScoped<IBrandService, BrandManager>();
+            services.AddScoped<IValidator<BrandCreateDto>, BrandCreateDtoValidation>();
+
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IValidator<CategoryCreateDto>, CategoryCreateDtoValidation>();
 
