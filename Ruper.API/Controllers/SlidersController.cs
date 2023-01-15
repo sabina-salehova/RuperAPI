@@ -39,6 +39,19 @@ namespace Ruper.API.Controllers
             return Ok(slidersDtos);
         }
 
+        [HttpGet("isActive")]
+        public async Task<IActionResult> GetIsActive()
+        {
+            var sliders = await _sliderRepository.GetAllIsActiveAsync();
+
+            if (sliders.Count == 0)
+                return NotFound("Hele hec bir slider yaradilmayib");
+
+            var slidersDtos = _mapper.Map<List<SliderDto>>(sliders);
+
+            return Ok(slidersDtos);
+        }
+
         [HttpGet("{id?}")]
         public async Task<IActionResult> Get([FromRoute] int? id)
         {
@@ -80,10 +93,13 @@ namespace Ruper.API.Controllers
         [HttpPut("{id?}")]
         public async Task<IActionResult> Put([FromRoute] int? id, [FromForm] SliderUpdateDto sliderUpdateDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var sliders = await _sliderRepository.GetAllAsync();
 
             if (sliders.Count == 0)
-                return NotFound("Hele hec bir slider yaradilmayib");
+                return NotFound("Hele hec bir active slider yaradilmayib");
 
             await _sliderService.UpdateById(id, sliderUpdateDto);
 

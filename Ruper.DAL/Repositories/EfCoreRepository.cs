@@ -54,6 +54,11 @@ namespace Ruper.DAL.Repositories
             return await _dbContext.Set<T>().AsNoTracking().ToListAsync();           
         }
 
+        public async Task<IList<T>> GetAllIsActiveAsync()
+        {
+            return await _dbContext.Set<T>().AsNoTracking().Where(x=>x.IsActive).ToListAsync();
+        }
+
         public async Task<T> GetAsync(int? id)
         {
             if (id is null) throw new Exception();
