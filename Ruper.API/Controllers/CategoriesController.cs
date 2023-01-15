@@ -53,7 +53,7 @@ namespace Ruper.API.Controllers
             if (category is null)
                 return NotFound("Bele category movcud deyil");
 
-            var categoryDto = _mapper.Map<Category>(category);
+            var categoryDto = _mapper.Map<CategoryDto>(category);
 
             return Ok(categoryDto);
         }

@@ -4,11 +4,6 @@ using Ruper.BLL.Dtos;
 using Ruper.BLL.Services;
 using Ruper.BLL.Services.Contracts;
 using Ruper.BLL.Validators.CategoryValidators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ruper.BLL
 {
@@ -18,6 +13,10 @@ namespace Ruper.BLL
         {
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IValidator<CategoryCreateDto>, CategoryCreateDtoValidation>();
+
+            services.AddScoped<ISliderService, SliderManager>();
+            services.AddScoped<IValidator<SliderCreateDto>, SliderCreateDtoValidation>();
+            services.AddScoped<IValidator<SliderUpdateDto>, SliderUpdateDtoValidation>();
 
             return services;
         }

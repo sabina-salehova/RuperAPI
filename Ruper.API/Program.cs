@@ -5,6 +5,7 @@ using Ruper.DAL.DataContext;
 using Ruper.DAL;
 using FluentValidation.AspNetCore;
 using Ruper.BLL.Dtos;
+using System.Reflection;
 
 namespace Ruper.API
 {
@@ -58,9 +59,8 @@ namespace Ruper.API
             //    };
             //});
 
-            //builder.Services.AddFluentValidation(x=>x.RegisterValidatorsFromAssembly(assembly:Assembly.GetExecutingAssembly()));
-            builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CategoryCreateDto>());
-
+            builder.Services.AddFluentValidation(x=>x.RegisterValidatorsFromAssembly(assembly:Assembly.GetExecutingAssembly()));
+            
             //builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JWT"));
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
