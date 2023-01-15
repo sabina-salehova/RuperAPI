@@ -32,7 +32,7 @@ namespace Ruper.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async virtual Task DeleteAsync(int? id)
+        public async virtual Task CompletelyDeleteAsync(int? id)
         {
             if (id is null) throw new Exception();
 
@@ -54,9 +54,9 @@ namespace Ruper.DAL.Repositories
             return await _dbContext.Set<T>().AsNoTracking().ToListAsync();           
         }
 
-        public async Task<IList<T>> GetAllIsActiveAsync()
+        public async Task<IList<T>> GetAllIsNotDeletedAsync()
         {
-            return await _dbContext.Set<T>().AsNoTracking().Where(x=>x.IsActive).ToListAsync();
+            return await _dbContext.Set<T>().AsNoTracking().Where(x=>!x.IsDeleted).ToListAsync();
         }
 
         public async Task<T> GetAsync(int? id)

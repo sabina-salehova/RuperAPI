@@ -4,12 +4,17 @@
 
 namespace Ruper.DAL.Migrations
 {
-    public partial class AddedIsActiveFieldIEntity : Migration
+    public partial class AddIsDeletedFieldIEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
+            migrationBuilder.RenameColumn(
                 name: "IsActive",
+                table: "Sliders",
+                newName: "IsDeleted");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsDeleted",
                 table: "Categories",
                 type: "bit",
                 nullable: false,
@@ -19,8 +24,13 @@ namespace Ruper.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsActive",
+                name: "IsDeleted",
                 table: "Categories");
+
+            migrationBuilder.RenameColumn(
+                name: "IsDeleted",
+                table: "Sliders",
+                newName: "IsActive");
         }
     }
 }

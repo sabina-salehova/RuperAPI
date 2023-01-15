@@ -15,6 +15,7 @@ namespace Ruper.BLL.Mapping
         {
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryCreateDto>().ReverseMap();
+            CreateMap<Category, CategoryUpdateDto>().ReverseMap();
 
             CreateMap<Slider, SliderDto>().ReverseMap();
             CreateMap<Slider, SliderCreateDto>().ReverseMap();

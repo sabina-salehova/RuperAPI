@@ -39,13 +39,13 @@ namespace Ruper.API.Controllers
             return Ok(slidersDtos);
         }
 
-        [HttpGet("isActive")]
+        [HttpGet("isNotDeleted")]
         public async Task<IActionResult> GetIsActive()
         {
-            var sliders = await _sliderRepository.GetAllIsActiveAsync();
+            var sliders = await _sliderRepository.GetAllIsNotDeletedAsync();
 
             if (sliders.Count == 0)
-                return NotFound("Hele hec bir slider yaradilmayib");
+                return NotFound("Hele hec bir delete olmayan slider yaradilmayib");
 
             var slidersDtos = _mapper.Map<List<SliderDto>>(sliders);
 
@@ -99,17 +99,17 @@ namespace Ruper.API.Controllers
             var sliders = await _sliderRepository.GetAllAsync();
 
             if (sliders.Count == 0)
-                return NotFound("Hele hec bir active slider yaradilmayib");
+                return NotFound("Hele hec bir slider yaradilmayib");
 
             await _sliderService.UpdateById(id, sliderUpdateDto);
 
             return Ok();
         }
 
-        [HttpDelete("{id?}")]
-        public async Task<IActionResult> Delete([FromRoute] int? id)
+        [HttpDelete("completelyDelete/{id?}")]
+        public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
         {
-            await _sliderService.DeleteAsync(id);
+            await _sliderService.CompletelyDeleteAsync(id);
 
             return Ok();
         }

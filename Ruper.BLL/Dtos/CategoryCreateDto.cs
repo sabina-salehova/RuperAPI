@@ -12,6 +12,8 @@ namespace Ruper.BLL.Dtos
 
         public string ImageName = string.Empty;
 
+        public bool IsDeleted = false;
+
         //public DateTime CreatedAt = DateTime.Now;
 
         //public string CreatedBy = "Admin";

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Ruper.BLL.Data;
 using Ruper.BLL.Dtos;
 using Ruper.BLL.Services.Contracts;
 using Ruper.DAL.Entities;
@@ -37,12 +38,25 @@ namespace Ruper.API.Controllers
             return Ok(categoriesDtos);
         }
 
+        [HttpGet("isNotDeleted")]
+        public async Task<IActionResult> GetIsActive()
+        {
+            var categories = await _categoryRepository.GetAllIsNotDeletedAsync();
+
+            if (categories.Count == 0)
+                return NotFound("Hele hec bir delete olmayan category yaradilmayib");
+
+            var categoriesDtos = _mapper.Map<List<CategoryDto>>(categories);
+
+            return Ok(categoriesDtos);
+        }
+
         [HttpGet("{id?}")]
         public async Task<IActionResult> Get([FromRoute] int? id)
         {
             var categories = await _categoryRepository.GetAllAsync();
 
-            if(categories.Count==0)
+            if (categories.Count == 0)
                 return NotFound("Hele hec bir category yaradilmayib");
 
             if (id is null)
@@ -64,59 +78,40 @@ namespace Ruper.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            categoryCreateDto.ImageName = await SaveImage(categoryCreateDto.Image);
+            var forderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Category");
 
-            var createdCategory = _mapper.Map<Category>(categoryCreateDto);
+            categoryCreateDto.ImageName = await categoryCreateDto.Image.GenerateFile(forderPath);
 
-            await _categoryRepository.AddAsync(createdCategory);
+            var categoriedCategory = _mapper.Map<Category>(categoryCreateDto);
 
-            return Created(HttpContext.Request.Path, createdCategory.Id);
-        }
+            await _categoryRepository.AddAsync(categoriedCategory);
 
-        [NonAction]
-        public async Task<string> SaveImage(IFormFile imageFile)
-        {
-            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
-            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
-            var imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", imageName);
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(fileStream);
-                fileStream.Close();
-            }
-
-            return imageName;
+            return Created(HttpContext.Request.Path, categoriedCategory.Id);
         }
 
         [HttpPut("{id?}")]
-        public async Task<IActionResult> Put([FromRoute] int? id, [FromBody] CategoryUpdateDto categoryUpdateDto)
+        public async Task<IActionResult> Put([FromRoute] int? id, [FromForm] CategoryUpdateDto categoryUpdateDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var categories = await _categoryRepository.GetAllAsync();
 
             if (categories.Count == 0)
                 return NotFound("Hele hec bir category yaradilmayib");
 
-            if (id is null) return NotFound();
-
-            var existCategory = await _categoryRepository.GetAsync(id);
-
-            if (existCategory is null) return NotFound();
-
-            if (categoryUpdateDto.Id != id) return BadRequest();
-
-            var category = _mapper.Map<Category>(categoryUpdateDto);
-
-            await _categoryRepository.UpdateAsync(category);
+            await _categoryService.UpdateById(id, categoryUpdateDto);
 
             return Ok();
         }
 
-        [HttpDelete("{id?}")]
-        public async Task<IActionResult> Delete([FromRoute] int? id)
+        [HttpDelete("completelyDelete/{id?}")]
+        public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
         {
-            await _categoryRepository.DeleteAsync(id);
+            await _categoryService.CompletelyDeleteAsync(id);
 
             return Ok();
         }
+
     }
 }

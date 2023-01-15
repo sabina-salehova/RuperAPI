@@ -10,6 +10,6 @@ namespace Ruper.DAL.Base
     public interface IEntity
     {
         int Id { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

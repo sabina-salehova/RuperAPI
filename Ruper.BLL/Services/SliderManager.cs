@@ -21,7 +21,7 @@ namespace Ruper.BLL.Services
             _webHostEnvironment = webHostEnvironment;
             _mapper = mapper;
         }
-        public override async Task DeleteAsync(int? id)
+        public override async Task CompletelyDeleteAsync(int? id)
         {
             if (id is null) throw new Exception();
 
@@ -68,7 +68,7 @@ namespace Ruper.BLL.Services
 
             if (sliderUpdateDto.ButtonLink is null) sliderUpdateDto.ButtonLink = existSlider.ButtonLink;
 
-            if (sliderUpdateDto.IsActive is null) sliderUpdateDto.IsActive = existSlider.IsActive;
+            if (sliderUpdateDto.IsDeleted is null) sliderUpdateDto.IsDeleted = existSlider.IsDeleted;
 
             var slider = _mapper.Map<Slider>(sliderUpdateDto);
 

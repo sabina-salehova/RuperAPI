@@ -12,8 +12,8 @@ using Ruper.DAL.DataContext;
 namespace Ruper.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230115012243_AddedIsActiveFieldIEntity")]
-    partial class AddedIsActiveFieldIEntity
+    [Migration("20230115094815_AddIsDeletedFieldIEntity")]
+    partial class AddIsDeletedFieldIEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,7 @@ namespace Ruper.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -86,7 +86,7 @@ namespace Ruper.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Subtitle")

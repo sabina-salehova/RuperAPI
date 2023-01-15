@@ -14,7 +14,7 @@ namespace Ruper.BLL.Dtos
         public string ImageName { get; set; }
         public string ButtonName { get; set; }
         public string ButtonLink { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

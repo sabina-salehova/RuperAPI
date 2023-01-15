@@ -15,7 +15,7 @@ namespace Ruper.BLL.Dtos
         public string? ImageName = string.Empty;
         public string? ButtonName { get; set; }
         public string? ButtonLink { get; set; }
-        public bool? IsActive { get; set; }
+        public bool? IsDeleted { get; set; }
 
         //public DateTime CreatedAt = DateTime.Now;
 

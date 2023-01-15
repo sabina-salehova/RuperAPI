@@ -40,7 +40,7 @@ namespace Ruper.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -84,7 +84,7 @@ namespace Ruper.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Subtitle")
