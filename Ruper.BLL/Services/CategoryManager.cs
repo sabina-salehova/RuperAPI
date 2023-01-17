@@ -30,6 +30,11 @@ namespace Ruper.BLL.Services
 
             if (deletedEntity is null) throw new Exception();
 
+            var subCategories = await _dbContext.SubCategories.Where(x => x.CategoryId == id)
+                                                             .FirstOrDefaultAsync();
+
+            if (subCategories is not null) throw new Exception();
+
             var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Category", deletedEntity.ImageName);
 
             if (File.Exists(path))
@@ -62,9 +67,20 @@ namespace Ruper.BLL.Services
             }
             else categoryUpdateDto.ImageName = existCategory.ImageName;
 
-            if (categoryUpdateDto.Name is null) categoryUpdateDto.Name = existCategory.Name;            
+            if (categoryUpdateDto.Name is null) categoryUpdateDto.Name = existCategory.Name;
 
-            if (categoryUpdateDto.IsDeleted is null) categoryUpdateDto.IsDeleted = existCategory.IsDeleted;
+            if (categoryUpdateDto.IsDeleted is null)
+            {
+                categoryUpdateDto.IsDeleted = existCategory.IsDeleted;
+            }
+            else
+            {
+                var subCategories = await _dbContext.SubCategories
+                    .Where(x => x.CategoryId == id && x.IsDeleted==false)
+                    .FirstOrDefaultAsync();
+
+                if (categoryUpdateDto.IsDeleted==true && subCategories !=null) throw new Exception();
+            }
 
             var category = _mapper.Map<Category>(categoryUpdateDto);
 

@@ -68,7 +68,6 @@ namespace Ruper.API
             //builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddDalServices();
             builder.Services.AddBllServices();
-            //builder.Services.AddScoped(typeof(IRepository<>), typeof(XmlRepository<>));
 
             var app = builder.Build();
 

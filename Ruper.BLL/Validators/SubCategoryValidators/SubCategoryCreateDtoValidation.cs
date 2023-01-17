@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Ruper.BLL.Validators.CategoryValidators
 {
-    public class CategoryCreateDtoValidation : AbstractValidator<CategoryCreateDto>
+    public class SubCategoryCreateDtoValidation : AbstractValidator<SubCategoryCreateDto>
     {
-        public CategoryCreateDtoValidation()
+        public SubCategoryCreateDtoValidation()
         {
             RuleFor(x => x.Name)
                 .NotNull().WithMessage("name null ola bilmez")

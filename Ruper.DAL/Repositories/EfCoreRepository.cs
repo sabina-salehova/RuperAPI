@@ -14,7 +14,7 @@ namespace Ruper.DAL.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task AddAsync(T entity)
+        public async virtual Task AddAsync(T entity)
         {
             await _dbContext.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
@@ -49,17 +49,17 @@ namespace Ruper.DAL.Repositories
             //override edilib --> StudentManager
         }
 
-        public async Task<IList<T>> GetAllAsync()
+        public async virtual Task<IList<T>> GetAllAsync()
         {
             return await _dbContext.Set<T>().AsNoTracking().ToListAsync();           
         }
 
-        public async Task<IList<T>> GetAllIsNotDeletedAsync()
+        public async virtual Task<IList<T>> GetAllIsNotDeletedAsync()
         {
             return await _dbContext.Set<T>().AsNoTracking().Where(x=>!x.IsDeleted).ToListAsync();
         }
 
-        public async Task<T> GetAsync(int? id)
+        public async virtual Task<T> GetAsync(int? id)
         {
             if (id is null) throw new Exception();
 

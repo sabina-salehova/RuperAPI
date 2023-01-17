@@ -17,6 +17,9 @@ namespace Ruper.BLL
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IValidator<CategoryCreateDto>, CategoryCreateDtoValidation>();
 
+            services.AddScoped<ISubCategoryService, SubCategoryManager>();
+            services.AddScoped<IValidator<SubCategoryCreateDto>, SubCategoryCreateDtoValidation>();
+
             services.AddScoped<ISliderService, SliderManager>();
             services.AddScoped<IValidator<SliderCreateDto>, SliderCreateDtoValidation>();
             services.AddScoped<IValidator<SliderUpdateDto>, SliderUpdateDtoValidation>();
