@@ -6,6 +6,7 @@ using Ruper.DAL;
 using FluentValidation.AspNetCore;
 using Ruper.BLL.Dtos;
 using System.Reflection;
+using Microsoft.Extensions.FileProviders;
 
 namespace Ruper.API
 {
@@ -26,16 +27,16 @@ namespace Ruper.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-            //builder.Services.AddCors(options =>
-            //{
-            //    options.AddPolicy(name: MyAllowSpecificOrigins,
-            //                      policy =>
-            //                      {
-            //                          policy.AllowAnyOrigin().AllowAnyMethod();
-            //                      });
-            //});
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.AllowAnyOrigin().AllowAnyMethod();
+                                  });
+            });
 
             //builder.Services.AddAuthentication(options =>
             //{
@@ -71,6 +72,13 @@ namespace Ruper.API
 
             var app = builder.Build();
 
+            app.UseFileServer(new FileServerOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "images")),
+                RequestPath = new PathString("/images"),
+                EnableDirectoryBrowsing = true
+            });
+
             // Configure the HTTP request pipeline.
 
             if (app.Environment.IsDevelopment())
@@ -81,7 +89,7 @@ namespace Ruper.API
 
             app.UseHttpsRedirection();
 
-            //app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthentication();
 

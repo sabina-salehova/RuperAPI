@@ -16,6 +16,7 @@ namespace Ruper.API.Controllers
         private readonly IRepository<Brand> _brandRepository;
         private readonly IBrandService _brandService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+       
 
         public BrandsController(IMapper mapper, IRepository<Brand> brandRepository, IBrandService brandService, IWebHostEnvironment webHostEnvironment)
         {
@@ -23,7 +24,7 @@ namespace Ruper.API.Controllers
             _brandRepository = brandRepository;
             _brandService = brandService;
             _webHostEnvironment = webHostEnvironment;
-        }
+        }          
 
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -33,13 +34,15 @@ namespace Ruper.API.Controllers
             if (brands.Count == 0)
                 return NotFound("Hele hec bir brand yaradilmayib");
 
-            var brandssDtos = _mapper.Map<List<BrandDto>>(brands);
+            var brandsDtos = _mapper.Map<List<BrandDto>>(brands);
 
-            return Ok(brandssDtos);
+            brandsDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/brand/" + x.ImageName);
+
+            return Ok(brandsDtos);
         }
 
         [HttpGet("isNotDeleted")]
-        public async Task<IActionResult> GetIsActive()
+        public async Task<IActionResult> GetIsNotDeleted()
         {
             var brands = await _brandRepository.GetAllIsNotDeletedAsync();
 
@@ -47,6 +50,8 @@ namespace Ruper.API.Controllers
                 return NotFound("Hele hec bir delete olmayan brand yaradilmayib");
 
             var brandsDtos = _mapper.Map<List<BrandDto>>(brands);
+
+            brandsDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/brand/" + x.ImageName);
 
             return Ok(brandsDtos);
         }
@@ -68,6 +73,8 @@ namespace Ruper.API.Controllers
                 return NotFound("Bele brand movcud deyil");
 
             var brandDto = _mapper.Map<BrandDto>(brand);
+
+            brandDto.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/brand/" + brandDto.ImageName;
 
             return Ok(brandDto);
         }

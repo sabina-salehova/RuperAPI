@@ -36,11 +36,13 @@ namespace Ruper.API.Controllers
 
             var slidersDtos = _mapper.Map<List<SliderDto>>(sliders);
 
+            slidersDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/slider/" + x.ImageName);
+
             return Ok(slidersDtos);
         }
 
         [HttpGet("isNotDeleted")]
-        public async Task<IActionResult> GetIsActive()
+        public async Task<IActionResult> GetIsNotDeleted()
         {
             var sliders = await _sliderRepository.GetAllIsNotDeletedAsync();
 
@@ -48,6 +50,8 @@ namespace Ruper.API.Controllers
                 return NotFound("Hele hec bir delete olmayan slider yaradilmayib");
 
             var slidersDtos = _mapper.Map<List<SliderDto>>(sliders);
+
+            slidersDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/slider/" + x.ImageName);
 
             return Ok(slidersDtos);
         }
@@ -69,6 +73,8 @@ namespace Ruper.API.Controllers
                 return NotFound("Bele slider movcud deyil");
 
             var sliderDto = _mapper.Map<SliderDto>(slider);
+
+            sliderDto.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/slider/" + sliderDto.ImageName;
 
             return Ok(sliderDto);
         }

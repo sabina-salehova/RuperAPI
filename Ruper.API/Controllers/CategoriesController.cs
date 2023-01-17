@@ -35,11 +35,13 @@ namespace Ruper.API.Controllers
 
             var categoriesDtos = _mapper.Map<List<CategoryDto>>(categories);
 
+            categoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/category/" + x.ImageName);
+
             return Ok(categoriesDtos);
         }
 
         [HttpGet("isNotDeleted")]
-        public async Task<IActionResult> GetIsActive()
+        public async Task<IActionResult> GetIsNotDeleted()
         {
             var categories = await _categoryRepository.GetAllIsNotDeletedAsync();
 
@@ -47,6 +49,8 @@ namespace Ruper.API.Controllers
                 return NotFound("Hele hec bir delete olmayan category yaradilmayib");
 
             var categoriesDtos = _mapper.Map<List<CategoryDto>>(categories);
+
+            categoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/category/" + x.ImageName);
 
             return Ok(categoriesDtos);
         }
@@ -68,6 +72,8 @@ namespace Ruper.API.Controllers
                 return NotFound("Bele category movcud deyil");
 
             var categoryDto = _mapper.Map<CategoryDto>(category);
+
+            categoryDto.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/category/" + categoryDto.ImageName;
 
             return Ok(categoryDto);
         }
