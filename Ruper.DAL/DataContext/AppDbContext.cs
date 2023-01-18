@@ -14,5 +14,6 @@ namespace Ruper.DAL.DataContext
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<Color> Colors { get; set; }
     }
 }

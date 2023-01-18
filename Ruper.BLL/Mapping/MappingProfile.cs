@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Ruper.BLL.Dtos;
 using Ruper.DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ruper.BLL.Mapping
 {
@@ -28,6 +23,10 @@ namespace Ruper.BLL.Mapping
             CreateMap<Slider, SliderDto>().ReverseMap();
             CreateMap<Slider, SliderCreateDto>().ReverseMap();
             CreateMap<Slider, SliderUpdateDto>().ReverseMap();
+
+            CreateMap<Color, ColorDto>().ReverseMap();
+            CreateMap<Color, ColorCreateDto>().ReverseMap();
+            CreateMap<Color, ColorUpdateDto>().ReverseMap();
         }
     }
 }

@@ -24,6 +24,9 @@ namespace Ruper.BLL
             services.AddScoped<IValidator<SliderCreateDto>, SliderCreateDtoValidation>();
             services.AddScoped<IValidator<SliderUpdateDto>, SliderUpdateDtoValidation>();
 
+            services.AddScoped<IColorService, ColorManager>();
+            services.AddScoped<IValidator<ColorCreateDto>, ColorCreateDtoValidation>();
+
             return services;
         }
     }
