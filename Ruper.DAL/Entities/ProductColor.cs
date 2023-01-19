@@ -1,0 +1,29 @@
+﻿using Ruper.DAL.Base;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Ruper.DAL.Entities
+{
+    public class ProductColor : TimeStample, IEntity
+    {
+        public ProductColor()
+        {
+            SKU = "PRD" + ProductId + "-CLR" + ColorId + "-PC" + Id;
+        }
+        public int Id { get; set; }
+        public string SKU { get; }
+        public int Quantity { get; set; }
+        [Required]
+        public int ProductId { get; set; }
+        public virtual Product Product { get; set; }
+        [Required]
+        public int ColorId { get; set; }
+        public virtual Color Color { get; set; }
+        public bool IsDeleted { get; set; }
+        public virtual List<ProductImage> ProductImages { get; set; }
+    }
+}

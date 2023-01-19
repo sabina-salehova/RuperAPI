@@ -30,7 +30,7 @@ namespace Ruper.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var subCategories = await _subCategoryService.GetAllAsync();
+            var subCategories = await _subCategoryRepository.GetAllAsync();
 
             if (subCategories.Count == 0)
                 return NotFound("Hele hec bir subCategory yaradilmayib");
@@ -49,7 +49,7 @@ namespace Ruper.API.Controllers
         [HttpGet("isNotDeleted")]
         public async Task<IActionResult> GetIsActive()
         {
-            var subCategories = await _subCategoryService.GetAllIsNotDeletedAsync();
+            var subCategories = await _subCategoryRepository.GetAllIsNotDeletedAsync();
 
             if (subCategories.Count == 0)
                 return NotFound("Hele hec bir delete olmayan subCategory yaradilmayib");
@@ -68,15 +68,15 @@ namespace Ruper.API.Controllers
         [HttpGet("{id?}")]
         public async Task<IActionResult> Get([FromRoute] int? id)
         {
-            var subCategories = await _subCategoryService.GetAllAsync();
+            if (id is null)
+                return NotFound();
+
+            var subCategories = await _subCategoryRepository.GetAllAsync();
 
             if (subCategories.Count == 0)
                 return NotFound("Hele hec bir subCategory yaradilmayib");
 
-            if (id is null)
-                return NotFound();
-
-            var subCategory = await _subCategoryService.GetAsync(id);
+            var subCategory = await _subCategoryRepository.GetAsync(id);
 
             if (subCategory is null)
                 return NotFound("Bele subCategory movcud deyil");
@@ -104,7 +104,7 @@ namespace Ruper.API.Controllers
 
             var subCategoriedCategory = _mapper.Map<SubCategory>(subCategoryCreateDto);
 
-            await _subCategoryRepository.AddAsync(subCategoriedCategory);
+            await _subCategoryService.AddAsync(subCategoriedCategory);
 
             return Created(HttpContext.Request.Path, subCategoriedCategory.Id);
         }
@@ -112,7 +112,7 @@ namespace Ruper.API.Controllers
         [HttpPut("{id?}")]
         public async Task<IActionResult> Put([FromRoute] int? id, [FromForm] SubCategoryUpdateDto subCategoryUpdateDto)
         {    
-            var subCategories = await _subCategoryService.GetAllAsync();
+            var subCategories = await _subCategoryRepository.GetAllAsync();
 
             if (subCategories.Count == 0)
                 return NotFound("Hele hec bir subCategory yaradilmayib");

@@ -26,8 +26,6 @@ namespace Ruper.BLL.Services
 
         public override async Task AddAsync(SubCategory entity)
         {
-            if (entity.CategoryId is null) throw new Exception();
-
             Category category = await _dbContext.Categories.FindAsync(entity.CategoryId);
 
             if(category is null) throw new Exception();
@@ -45,6 +43,11 @@ namespace Ruper.BLL.Services
 
             if (deletedEntity is null) throw new Exception();
 
+            var product = await _dbContext.Products.Where(x => x.SubCategoryId == id)
+                                                             .FirstOrDefaultAsync();
+
+            if (product is not null) throw new Exception();
+
             var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "SubCategory", deletedEntity.ImageName);
 
             if (File.Exists(path))
@@ -52,30 +55,6 @@ namespace Ruper.BLL.Services
 
             _dbContext.Remove(deletedEntity);
             await _dbContext.SaveChangesAsync();
-        }
-
-        public async override Task<IList<SubCategory>> GetAllAsync()
-        {
-            return await _dbContext.SubCategories
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async override Task<SubCategory> GetAsync(int? id)
-        {
-            if (id is null) throw new Exception();
-
-            return await _dbContext.SubCategories.AsNoTracking()
-                                              .Where(x=>x.Id==id)
-                                              .FirstOrDefaultAsync();
-        }
-
-        public async override Task<IList<SubCategory>> GetAllIsNotDeletedAsync()
-        {
-            return await _dbContext.SubCategories
-                .AsNoTracking()
-                .Where(x => !x.IsDeleted)
-                .ToListAsync();
         }
 
         public async Task UpdateById(int? id, SubCategoryUpdateDto subCategoryUpdateDto)
@@ -116,6 +95,19 @@ namespace Ruper.BLL.Services
             Category category = await _dbContext.Categories.FindAsync(subCategoryUpdateDto.CategoryId);
 
             if (category is null) throw new Exception();
+
+            if (subCategoryUpdateDto.IsDeleted is null)
+            {
+                subCategoryUpdateDto.IsDeleted = existSubCategory.IsDeleted;
+            }
+            else
+            {
+                var product = await _dbContext.Products
+                    .Where(x => x.SubCategoryId == id && x.IsDeleted == false)
+                    .FirstOrDefaultAsync();
+
+                if (subCategoryUpdateDto.IsDeleted == true && product != null) throw new Exception();
+            }
 
             if (subCategoryUpdateDto.IsDeleted == false && category.IsDeleted == true) throw new Exception();
 

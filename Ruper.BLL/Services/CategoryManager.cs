@@ -30,10 +30,10 @@ namespace Ruper.BLL.Services
 
             if (deletedEntity is null) throw new Exception();
 
-            var subCategories = await _dbContext.SubCategories.Where(x => x.CategoryId == id)
+            var subCategory = await _dbContext.SubCategories.Where(x => x.CategoryId == id)
                                                              .FirstOrDefaultAsync();
 
-            if (subCategories is not null) throw new Exception();
+            if (subCategory is not null) throw new Exception();
 
             var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Category", deletedEntity.ImageName);
 

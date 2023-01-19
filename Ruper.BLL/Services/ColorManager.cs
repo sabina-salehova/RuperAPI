@@ -32,6 +32,28 @@ namespace Ruper.BLL.Services
             await base.AddAsync(entity);
         }
 
+        //public override async Task CompletelyDeleteAsync(int? id)
+        //{
+        //    if (id is null) throw new Exception();
+
+        //    var deletedEntity = await _dbContext.Colors.FindAsync(id);
+
+        //    if (deletedEntity is null) throw new Exception();
+
+        //    var subCategory = await _dbContext.Products.Where(x => x.col == id)
+        //                                                     .FirstOrDefaultAsync();
+
+        //    if (subCategory is not null) throw new Exception();
+
+        //    var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Category", deletedEntity.ImageName);
+
+        //    if (File.Exists(path))
+        //        File.Delete(path);
+
+        //    _dbContext.Remove(deletedEntity);
+        //    await _dbContext.SaveChangesAsync();
+        //}
+
         public async Task UpdateById(int? id, ColorUpdateDto colorUpdateDto)
         {
             if (id is null) throw new Exception();

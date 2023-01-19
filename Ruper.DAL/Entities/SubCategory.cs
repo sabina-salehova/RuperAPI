@@ -1,6 +1,5 @@
 ﻿using Ruper.DAL.Base;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ruper.DAL.Entities
 {
@@ -10,9 +9,10 @@ namespace Ruper.DAL.Entities
         public string Name { get; set; }
         public string ImageName { get; set; }
         public bool IsDeleted { get; set; }
-        public int? CategoryId { get; set; }
 
-        //[ForeignKey("CategoryId")]
+        [Required]
+        public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
+        public virtual List<Product> Products { get; set; }
     }
 }
