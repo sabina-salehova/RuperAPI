@@ -30,6 +30,8 @@ namespace Ruper.BLL
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<IValidator<ProductCreateDto>, ProductCreateDtoValidation>();
 
+            services.AddScoped<IProductColorService, ProductColorManager>();
+
             return services;
         }
     }

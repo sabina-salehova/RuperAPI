@@ -31,6 +31,12 @@ namespace Ruper.BLL.Mapping
             CreateMap<Product, ProductDto>().ReverseMap();
             CreateMap<Product, ProductCreateDto>().ReverseMap();
             CreateMap<Product, ProductUpdateDto>().ReverseMap();
+
+            CreateMap<ProductColor, ProductColorDto>().ReverseMap();
+            CreateMap<ProductColor, ProductColorCreateDto>().ReverseMap();
+            CreateMap<ProductColor, GeneralProductColorDto>().ReverseMap();
+
+            CreateMap<Product, GeneralProductDto>().ReverseMap();
         }
     }
 }

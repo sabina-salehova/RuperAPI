@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ruper.BLL.Dtos;
 using Ruper.BLL.Services.Contracts;
@@ -20,7 +21,7 @@ namespace Ruper.BLL.Services
             _webHostEnvironment = webHostEnvironment;
             _mapper = mapper;
         }
-
+        
         public override async Task AddAsync(Product entity)
         {
             SubCategory subCategory = await _dbContext.SubCategories.FindAsync(entity.SubCategoryId);
@@ -124,6 +125,40 @@ namespace Ruper.BLL.Services
 
             _dbContext.Products.Update(product);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IList<GeneralProductColorDto>> GetGeneralProducts()
+        {
+            var products = await _dbContext.Products.ToListAsync();
+
+            if (products.Count == 0)
+                throw new Exception();
+
+            var generalProductsDtos = _mapper.Map<List<GeneralProductDto>>(products);
+
+            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
+
+            var brands = await _dbContext.Brands.ToListAsync();
+            generalProductsDtos.ForEach(x => x.BrandName = brands.Where(y => y.Id == x.BrandId).FirstOrDefault().Name);
+
+            var subCategories = await _dbContext.SubCategories.ToListAsync();
+            generalProductsDtos.ForEach(x => x.SubCategoryName = subCategories.Where(y => y.Id == x.SubCategoryId).FirstOrDefault().Name);
+            generalProductsDtos.ForEach(x => x.CategoryId = subCategories.Where(y => y.Id == x.SubCategoryId).FirstOrDefault().CategoryId);
+
+            var categories = await _dbContext.Categories.ToListAsync();
+            generalProductsDtos.ForEach(x => x.CategoryId = subCategories.Where(y => y.Id == x.SubCategoryId).FirstOrDefault().CategoryId);
+            generalProductsDtos.ForEach(x => x.CategoryName = categories.Where(y => y.Id == x.CategoryId).FirstOrDefault().Name);
+
+            var productColors = await _dbContext.ProductColors.ToListAsync();
+
+            generalProductsDtos.ForEach(x => x.GeneralProductColors = _mapper.Map<List<GeneralProductColorDto>>(productColors.Where(y => y.ProductId == x.Id).ToList()));
+
+            var colors = await _dbContext.Colors.ToListAsync();
+
+            generalProductsDtos.ForEach(x => x.GeneralProductColors.ForEach(y => y.ColorName = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorName));
+            generalProductsDtos.ForEach(x => x.GeneralProductColors.ForEach(y => y.ColorCode = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorCode));
+
+            return (IList<GeneralProductColorDto>)generalProductsDtos;
         }
     }
 }

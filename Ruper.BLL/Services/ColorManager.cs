@@ -64,17 +64,25 @@ namespace Ruper.BLL.Services
 
             if (colorUpdateDto.Id != id) throw new Exception();
 
-            if (colorUpdateDto.ColorName is null) colorUpdateDto.ColorName = existColor.ColorName;
+            if (colorUpdateDto.ColorName is null)
+            {
+                colorUpdateDto.ColorName = existColor.ColorName;
+            }
+            else 
+            {
+                if (colorUpdateDto.ColorName.Trim() != existColor.ColorName.Trim())
+                {
+                    var sameColor = await _dbContext.Colors
+                    .Where(x => x.ColorName == colorUpdateDto.ColorName || x.ColorCode == colorUpdateDto.ColorCode)
+                    .FirstOrDefaultAsync();
+
+                    if (sameColor is not null) throw new Exception();
+                }                
+            }
 
             if (colorUpdateDto.ColorCode is null) colorUpdateDto.ColorCode = existColor.ColorCode;            
 
-            if (colorUpdateDto.IsDeleted is null) colorUpdateDto.IsDeleted = existColor.IsDeleted;
-
-            var sameColor = await _dbContext.Colors
-            .Where(x => x.ColorName == colorUpdateDto.ColorName || x.ColorCode == colorUpdateDto.ColorCode)
-            .FirstOrDefaultAsync();
-
-            if (sameColor is not null) throw new Exception();
+            if (colorUpdateDto.IsDeleted is null) colorUpdateDto.IsDeleted = existColor.IsDeleted;                      
 
             var color = _mapper.Map<Color>(colorUpdateDto);
 

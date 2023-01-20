@@ -26,5 +26,6 @@ namespace Ruper.DAL.Entities
         [Required]
         public int SubCategoryId { get; set; }
         public virtual SubCategory SubCategory { get; set; }
+        public virtual List<ProductColor> ProductColors { get; set; } = new List<ProductColor>();
     }
 }

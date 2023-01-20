@@ -19,8 +19,10 @@ namespace Ruper.API.Controllers
         private readonly IRepository<Product> _productRepository;
         private readonly IProductService _productService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IRepository<ProductColor> _productColorRepository;
+        private readonly IRepository<Color> _ColorRepository;
 
-        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService)
+        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService, IRepository<ProductColor> productColorRepository, IRepository<Color> colorRepository)
         {
             _mapper = mapper;
             _subCategoryRepository = subCategoryRepository;
@@ -29,9 +31,46 @@ namespace Ruper.API.Controllers
             _brandRepository = brandRepository;
             _productRepository = productRepository;
             _productService = productService;
+            _productColorRepository = productColorRepository;
+            _ColorRepository = colorRepository;
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetGeneralProducts()
+        {
+            var products = await _productRepository.GetAllIsNotDeletedAsync();
+
+            if (products.Count == 0)
+                return NotFound("Hele hec bir product yaradilmayib");
+
+            var generalProductsDtos = _mapper.Map<List<GeneralProductDto>>(products);
+
+            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
+
+            var brands = await _brandRepository.GetAllAsync();
+            generalProductsDtos.ForEach(x => x.BrandName = brands.Where(y => y.Id == x.BrandId).FirstOrDefault().Name);
+
+            var subCategories = await _subCategoryRepository.GetAllAsync();
+            generalProductsDtos.ForEach(x => x.SubCategoryName = subCategories.Where(y => y.Id == x.SubCategoryId).FirstOrDefault().Name);
+            generalProductsDtos.ForEach(x => x.CategoryId = subCategories.Where(y => y.Id == x.SubCategoryId).FirstOrDefault().CategoryId);
+
+            var categories = await _categoryRepository.GetAllAsync();
+            generalProductsDtos.ForEach(x => x.CategoryId = subCategories.Where(y => y.Id == x.SubCategoryId).FirstOrDefault().CategoryId);
+            generalProductsDtos.ForEach(x => x.CategoryName = categories.Where(y => y.Id == x.CategoryId).FirstOrDefault().Name);
+
+            var productColors = await _productColorRepository.GetAllIsNotDeletedAsync();
+
+            generalProductsDtos.ForEach(x => x.GeneralProductColors = _mapper.Map<List<GeneralProductColorDto>>(productColors.Where(y => y.ProductId == x.Id && !x.IsDeleted).ToList()));
+
+            var colors = await _ColorRepository.GetAllAsync();
+
+            generalProductsDtos.ForEach(x => x.GeneralProductColors.ForEach(y => y.ColorName = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorName));
+            generalProductsDtos.ForEach(x => x.GeneralProductColors.ForEach(y => y.ColorCode = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorCode));
+
+            return Ok(generalProductsDtos);
+        }
+
+        [HttpGet("withoutColorsAndImages")]
         public async Task<IActionResult> Get()
         {
             var products = await _productRepository.GetAllAsync();
@@ -54,11 +93,10 @@ namespace Ruper.API.Controllers
             productsDtos.ForEach(x => x.CategoryId = subCategories.Where(y => y.Id == x.SubCategoryId).FirstOrDefault().CategoryId);
             productsDtos.ForEach(x => x.CategoryName = categories.Where(y => y.Id == x.CategoryId).FirstOrDefault().Name);
 
-
             return Ok(productsDtos);
         }
 
-        [HttpGet("isNotDeleted")]
+        [HttpGet("isNotDeletedwithoutColorsAndImages")]
         public async Task<IActionResult> GetIsActive()
         {
             var products = await _productRepository.GetAllIsNotDeletedAsync();
@@ -152,7 +190,7 @@ namespace Ruper.API.Controllers
             await _productService.CompletelyDeleteAsync(id);
 
             return Ok();
-        }
+        }        
 
     }
 }
