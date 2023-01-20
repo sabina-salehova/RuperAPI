@@ -25,7 +25,7 @@ namespace Ruper.BLL.Services
         {
             var color = await _dbContext.Colors
                 .Where(x => x.ColorName == entity.ColorName || x.ColorCode == entity.ColorCode)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();  
 
             if(color is not null) throw new Exception();
 
@@ -82,7 +82,17 @@ namespace Ruper.BLL.Services
 
             if (colorUpdateDto.ColorCode is null) colorUpdateDto.ColorCode = existColor.ColorCode;            
 
-            if (colorUpdateDto.IsDeleted is null) colorUpdateDto.IsDeleted = existColor.IsDeleted;                      
+            if (colorUpdateDto.IsDeleted is null) colorUpdateDto.IsDeleted = existColor.IsDeleted;
+
+            var productColor = await _dbContext.ProductColors
+                               .Where(x=>x.ColorId==colorUpdateDto.Id).
+                               FirstOrDefaultAsync();
+
+            if (colorUpdateDto.IsDeleted == true)
+            {
+                if (productColor is not null)
+                    throw new Exception();
+            }
 
             var color = _mapper.Map<Color>(colorUpdateDto);
 

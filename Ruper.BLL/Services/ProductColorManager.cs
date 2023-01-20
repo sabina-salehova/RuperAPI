@@ -40,7 +40,14 @@ namespace Ruper.BLL.Services
             {
                 if (product.IsDeleted == true || color.IsDeleted == true)
                     throw new Exception();
-            } 
+            }
+
+            var sameColorProduct = await _dbContext.ProductColors
+                                         .Where(x=>x.ColorId== entity.ColorId && entity.ProductId==x.ProductId)
+                                         .FirstOrDefaultAsync();
+
+            if(sameColorProduct is not null) throw new Exception();
+
             await base.AddAsync(entity);
         }
 

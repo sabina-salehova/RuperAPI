@@ -38,6 +38,8 @@ namespace Ruper.BLL.Services
                 throw new Exception();
             }
 
+            if (entity.Rate < 0 || entity.Rate > 5) throw new Exception();
+
             await base.AddAsync(entity);
         }
 

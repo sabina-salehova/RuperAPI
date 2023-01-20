@@ -83,7 +83,7 @@ namespace Ruper.API.Controllers
 
             var db = await _productColorRepository.GetAllAsync();
 
-            int lastCount = db.ToList().Count()+1;
+            int lastCount = db.ToList().Last().Id+1;
 
             productColor.SKU= "PRD-" + productColor.ProductId + "-CLR" + productColor.ColorId+ productColor.SKU+"-PCI" + lastCount;
 
