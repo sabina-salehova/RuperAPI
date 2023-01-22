@@ -32,27 +32,23 @@ namespace Ruper.BLL.Services
             await base.AddAsync(entity);
         }
 
-        //public override async Task CompletelyDeleteAsync(int? id)
-        //{
-        //    if (id is null) throw new Exception();
+        public override async Task CompletelyDeleteAsync(int? id)
+        {
+            if (id is null) throw new Exception();
 
-        //    var deletedEntity = await _dbContext.Colors.FindAsync(id);
+            var deletedEntity = await _dbContext.Colors.FindAsync(id);
 
-        //    if (deletedEntity is null) throw new Exception();
+            if (deletedEntity is null) throw new Exception();
 
-        //    var subCategory = await _dbContext.Products.Where(x => x.col == id)
-        //                                                     .FirstOrDefaultAsync();
+            var productColor = await _dbContext.ProductColors
+                               .Where(x => x.ColorId == deletedEntity.Id).
+                               FirstOrDefaultAsync();
 
-        //    if (subCategory is not null) throw new Exception();
+            if (productColor is not null) throw new Exception();
 
-        //    var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Category", deletedEntity.ImageName);
-
-        //    if (File.Exists(path))
-        //        File.Delete(path);
-
-        //    _dbContext.Remove(deletedEntity);
-        //    await _dbContext.SaveChangesAsync();
-        //}
+            _dbContext.Remove(deletedEntity);
+            await _dbContext.SaveChangesAsync();
+        }
 
         public async Task UpdateById(int? id, ColorUpdateDto colorUpdateDto)
         {
@@ -82,16 +78,17 @@ namespace Ruper.BLL.Services
 
             if (colorUpdateDto.ColorCode is null) colorUpdateDto.ColorCode = existColor.ColorCode;            
 
-            if (colorUpdateDto.IsDeleted is null) colorUpdateDto.IsDeleted = existColor.IsDeleted;
-
-            var productColor = await _dbContext.ProductColors
-                               .Where(x=>x.ColorId==colorUpdateDto.Id).
-                               FirstOrDefaultAsync();
-
-            if (colorUpdateDto.IsDeleted == true)
+            if (colorUpdateDto.IsDeleted is null)
             {
-                if (productColor is not null)
-                    throw new Exception();
+                colorUpdateDto.IsDeleted = existColor.IsDeleted;
+            }
+            else
+            {
+                var productColor = await _dbContext.ProductColors
+                    .Where(x => x.ColorId == id && x.IsDeleted == false)
+                    .FirstOrDefaultAsync();
+
+                if (colorUpdateDto.IsDeleted == true && productColor != null) throw new Exception();
             }
 
             var color = _mapper.Map<Color>(colorUpdateDto);

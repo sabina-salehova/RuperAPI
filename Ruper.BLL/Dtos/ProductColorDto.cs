@@ -12,9 +12,11 @@ namespace Ruper.BLL.Dtos
 
         [Required]
         public int ProductId { get; set; }
+        public string ProductName { get; set; }
 
         [Required]
         public int ColorId { get; set; }
+        public string ColorName { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

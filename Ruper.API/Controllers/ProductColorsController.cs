@@ -42,31 +42,72 @@ namespace Ruper.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var products = await _productColorRepository.GetAllAsync();
+            var productColors = await _productColorRepository.GetAllAsync();
 
-            if (products.Count == 0)
+            if (productColors.Count == 0)
                 return NotFound("Hele hec bir productun coloru yaradilmayib");
 
-            var productColorsDtos = _mapper.Map<List<ProductColorDto>>(products);
+            var productColorsDtos = _mapper.Map<List<ProductColorDto>>(productColors);
 
             //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
-                        
+            
+            var products = await _productRepository.GetAllAsync();
+            productColorsDtos.ForEach(x => x.ProductName = products.Where(y => y.Id == x.ProductId).FirstOrDefault().Name);
+
+            var colors = await _ColorRepository.GetAllAsync();
+            productColorsDtos.ForEach(x => x.ColorName = colors.Where(y => y.Id == x.ColorId).FirstOrDefault().ColorName);
+
             return Ok(productColorsDtos);
         }
 
         [HttpGet("isNotDeleted")]
         public async Task<IActionResult> GetIsNotDeletede()
         {
-            var products = await _productColorRepository.GetAllIsNotDeletedAsync();
+            var productColors = await _productColorRepository.GetAllIsNotDeletedAsync();
 
-            if (products.Count == 0)
-                return NotFound("Hele hec bir delete olmayan product yaradilmayib");
+            if (productColors.Count == 0)
+                return NotFound("Hele hec bir delete olmayan productColor yaradilmayib");
 
-            var productColorsDtos = _mapper.Map<List<ProductColorDto>>(products);
+            var productColorsDtos = _mapper.Map<List<ProductColorDto>>(productColors);
 
             //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
 
+            var products = await _productRepository.GetAllAsync();
+            productColorsDtos.ForEach(x => x.ProductName = products.Where(y => y.Id == x.ProductId).FirstOrDefault().Name);
+
+            var colors = await _ColorRepository.GetAllAsync();
+            productColorsDtos.ForEach(x => x.ColorName = colors.Where(y => y.Id == x.ColorId).FirstOrDefault().ColorName);
+
             return Ok(productColorsDtos);
+        }
+
+        [HttpGet("{id?}")]
+        public async Task<IActionResult> Get([FromRoute] int? id)
+        {
+            if (id is null)
+                return NotFound();
+
+            var productColors = await _productColorRepository.GetAllAsync();
+
+            if (productColors.Count == 0)
+                return NotFound("Hele hec bir productColor yaradilmayib");
+
+            var productColor = await _productColorRepository.GetAsync(id);
+
+            if (productColor is null)
+                return NotFound("Bele productColor movcud deyil");
+
+            var productColorDto = _mapper.Map<ProductColorDto>(productColor);
+
+            //subCategoryDto.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/category/" + subCategoryDto.ImageName;
+
+            var products = await _productRepository.GetAllAsync();
+            productColorDto.ProductName = products.Where(y => y.Id == productColorDto.ProductId).FirstOrDefault().Name;
+            
+            var colors = await _ColorRepository.GetAllAsync();
+            productColorDto.ColorName = colors.Where(y => y.Id == productColorDto.ColorId).FirstOrDefault().ColorName;
+
+            return Ok(productColorDto);
         }
 
         [HttpPost]
@@ -92,26 +133,26 @@ namespace Ruper.API.Controllers
             return Created(HttpContext.Request.Path, productColor.Id);
         }
 
-        //[HttpPut("{id?}")]
-        //public async Task<IActionResult> Put([FromRoute] int? id, [FromForm] ProductUpdateDto productUpdateDto)
-        //{
-        //    var products = await _productRepository.GetAllAsync();
+        [HttpPut("{id?}")]
+        public async Task<IActionResult> Put([FromRoute] int? id, [FromForm] ProductColorUpdateDto productColorUpdateDto)
+        {
+            var productColors = await _productColorRepository.GetAllAsync();
 
-        //    if (products.Count == 0)
-        //        return NotFound("Hele hec bir product yaradilmayib");
+            if (productColors.Count == 0)
+                return NotFound("Hele hec bir product yaradilmayib");
 
-        //    await _productService.UpdateById(id, productUpdateDto);
+            await _productColorService.UpdateById(id, productColorUpdateDto);
 
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
-        //[HttpDelete("completelyDelete/{id?}")]
-        //public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
-        //{
-        //    await _productService.CompletelyDeleteAsync(id);
+        [HttpDelete("completelyDelete/{id?}")]
+        public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
+        {
+            await _productColorService.CompletelyDeleteAsync(id);
 
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
     }
 }

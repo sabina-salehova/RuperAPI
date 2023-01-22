@@ -9,7 +9,6 @@ namespace Ruper.BLL.Dtos
     {
         [Required]
         public int Id { get; set; }
-        public string? SKU { get; }
         public int? Quantity { get; set; }
         public int? ProductId { get; set; }
         public int? ColorId { get; set; }

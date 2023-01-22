@@ -43,7 +43,6 @@ namespace Ruper.BLL.Services
             await base.AddAsync(entity);
         }
 
-        //productColor-dan sonra duzeliw edilmeli
         public override async Task CompletelyDeleteAsync(int? id)
         {
             if (id is null) throw new Exception();
@@ -51,6 +50,12 @@ namespace Ruper.BLL.Services
             var deletedEntity = await _dbContext.Products.FindAsync(id);
 
             if (deletedEntity is null) throw new Exception();
+
+            var productColor = await _dbContext.ProductColors
+                               .Where(x => x.ProductId == deletedEntity.Id).
+                               FirstOrDefaultAsync();
+
+            if (productColor is not null) throw new Exception();
 
             //var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "SubCategory", deletedEntity.ImageName);
 
@@ -97,7 +102,14 @@ namespace Ruper.BLL.Services
             if (productUpdateDto.IsDeleted is null)
             {
                 productUpdateDto.IsDeleted = existProduct.IsDeleted;
-            }            
+            }else
+            {
+                var productColor = await _dbContext.ProductColors
+                    .Where(x => x.ProductId == id && x.IsDeleted == false)
+                    .FirstOrDefaultAsync();
+
+                if (productUpdateDto.IsDeleted == true && productColor != null) throw new Exception();
+            }
 
             if (productUpdateDto.SubCategoryId is null)
             {

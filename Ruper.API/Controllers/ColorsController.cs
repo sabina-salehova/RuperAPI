@@ -102,7 +102,7 @@ namespace Ruper.API.Controllers
         [HttpDelete("completelyDelete/{id?}")]
         public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
         {
-            await _colorRepository.CompletelyDeleteAsync(id);
+            await _colorService.CompletelyDeleteAsync(id);
 
             return Ok();
         }

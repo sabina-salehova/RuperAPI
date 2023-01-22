@@ -6,6 +6,6 @@ namespace Ruper.BLL.Services.Contracts
 {
     public interface IProductColorService : IRepository<ProductColor>
     {
-        Task UpdateById(int? id, SubCategoryUpdateDto subCategoryUpdateDto); 
+        Task UpdateById(int? id, ProductColorUpdateDto productColorUpdateDto); 
     }
 }
