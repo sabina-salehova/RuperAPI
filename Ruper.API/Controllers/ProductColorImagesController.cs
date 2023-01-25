@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Ruper.BLL.Data;
 using Ruper.BLL.Dtos;
+using Ruper.BLL.Services.Contracts;
 using Ruper.DAL.Entities;
 using Ruper.DAL.Repositories.Contracts;
 
@@ -15,14 +16,16 @@ namespace Ruper.API.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IRepository<ProductColor> _productColorRepository;
         private readonly IRepository<ProductColorImage> _productColorImageRepository;
+        private readonly IPCIService _productColorImageService;
 
 
-        public ProductColorImagesController(IMapper mapper, IWebHostEnvironment webHostEnvironment, IRepository<ProductColor> productColorRepository, IRepository<ProductColorImage> productColorImageRepository)
+        public ProductColorImagesController(IMapper mapper, IWebHostEnvironment webHostEnvironment, IRepository<ProductColor> productColorRepository, IRepository<ProductColorImage> productColorImageRepository, IPCIService productColorImageService)
         {
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _productColorRepository = productColorRepository;
             _productColorImageRepository = productColorImageRepository;
+            _productColorImageService = productColorImageService;
         }
 
         [HttpGet]
@@ -97,7 +100,7 @@ namespace Ruper.API.Controllers
         [HttpDelete("completelyDelete/{id?}")]
         public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
         {
-            await _productColorImageRepository.CompletelyDeleteAsync(id);
+            await _productColorImageService.CompletelyDeleteAsync(id);
 
             return Ok();
         }

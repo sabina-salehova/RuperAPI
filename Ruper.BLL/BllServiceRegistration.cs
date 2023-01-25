@@ -32,6 +32,9 @@ namespace Ruper.BLL
 
             services.AddScoped<IProductColorService, ProductColorManager>();
 
+            services.AddScoped<IPCIService, PCIManager>();
+            services.AddScoped<IValidator<PCICreateDto>, PCICreateDtoValidation>();
+
             return services;
         }
     }
