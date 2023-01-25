@@ -17,5 +17,6 @@ namespace Ruper.DAL.DataContext
         public DbSet<Color> Colors { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductColor> ProductColors { get; set; }
+        public DbSet<ProductColorImage> ProductColorImages { get; set; }
     }
 }

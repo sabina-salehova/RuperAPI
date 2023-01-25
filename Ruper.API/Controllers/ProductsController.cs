@@ -21,8 +21,9 @@ namespace Ruper.API.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IRepository<ProductColor> _productColorRepository;
         private readonly IRepository<Color> _ColorRepository;
+        private readonly IRepository<ProductColorImage> _productColorImageRepository;
 
-        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService, IRepository<ProductColor> productColorRepository, IRepository<Color> colorRepository)
+        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService, IRepository<ProductColor> productColorRepository, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository)
         {
             _mapper = mapper;
             _subCategoryRepository = subCategoryRepository;
@@ -33,6 +34,7 @@ namespace Ruper.API.Controllers
             _productService = productService;
             _productColorRepository = productColorRepository;
             _ColorRepository = colorRepository;
+            _productColorImageRepository = productColorImageRepository;
         }
 
         [HttpGet]
@@ -44,8 +46,6 @@ namespace Ruper.API.Controllers
                 return NotFound("Hele hec bir product yaradilmayib");
 
             var generalProductsDtos = _mapper.Map<List<GeneralProductDto>>(products);
-
-            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
 
             var brands = await _brandRepository.GetAllAsync();
             generalProductsDtos.ForEach(x => x.BrandName = brands.Where(y => y.Id == x.BrandId).FirstOrDefault().Name);
@@ -61,6 +61,16 @@ namespace Ruper.API.Controllers
             var productColors = await _productColorRepository.GetAllIsNotDeletedAsync();
 
             generalProductsDtos.ForEach(x => x.GeneralProductColors = _mapper.Map<List<GeneralProductColorDto>>(productColors.Where(y => y.ProductId == x.Id && !x.IsDeleted).ToList()));
+
+            var productColorImages = await _productColorImageRepository.GetAllIsNotDeletedAsync();
+
+            generalProductsDtos.ForEach(x => x.GeneralProductColors
+                               .ForEach(y => y.GeneralProductColorImages = _mapper.Map<List<GeneralPCIDto>>(productColorImages.Where(z => z.ProductColorId == y.Id).ToList())));
+
+            string imagePath = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/product/";
+
+            generalProductsDtos.ForEach(x => x.GeneralProductColors
+                               .ForEach(y => y.GeneralProductColorImages.ForEach(z=>z.ImageName=imagePath+z.ImageName)));
 
             var colors = await _ColorRepository.GetAllAsync();
 

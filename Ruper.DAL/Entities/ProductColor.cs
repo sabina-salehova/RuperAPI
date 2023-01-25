@@ -20,7 +20,7 @@ namespace Ruper.DAL.Entities
         public int ColorId { get; set; }
         public virtual Color Color { get; set; }
         public bool IsDeleted { get; set; }
+        public virtual List<ProductColorImage> ProductColorImages { get; set; } = new List<ProductColorImage>();
 
-        //public virtual List<ProductImage> ProductImages { get; set; }
     }
 }
