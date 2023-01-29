@@ -25,8 +25,9 @@ namespace Ruper.API.Controllers
         private readonly IRepository<Color> _ColorRepository;
         private readonly IProductColorService _productColorService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IRepository<ProductColorImage> _productColorImageRepository;
 
-        public ProductColorsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IRepository<ProductColor> productColorRepository, IProductColorService productColorService, IRepository<Color> colorRepository)
+        public ProductColorsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IRepository<ProductColor> productColorRepository, IProductColorService productColorService, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository)
         {
             _mapper = mapper;
             _subCategoryRepository = subCategoryRepository;
@@ -37,6 +38,7 @@ namespace Ruper.API.Controllers
             _productColorRepository = productColorRepository;
             _productColorService = productColorService;
             _ColorRepository = colorRepository;
+            _productColorImageRepository = productColorImageRepository;
         }
 
         [HttpGet]
@@ -48,14 +50,20 @@ namespace Ruper.API.Controllers
                 return NotFound("Hele hec bir productun coloru yaradilmayib");
 
             var productColorsDtos = _mapper.Map<List<ProductColorDto>>(productColors);
-
-            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
-            
+         
             var products = await _productRepository.GetAllAsync();
             productColorsDtos.ForEach(x => x.ProductName = products.Where(y => y.Id == x.ProductId).FirstOrDefault().Name);
 
             var colors = await _ColorRepository.GetAllAsync();
             productColorsDtos.ForEach(x => x.ColorName = colors.Where(y => y.Id == x.ColorId).FirstOrDefault().ColorName);
+                        
+            var productColorImages = await _productColorImageRepository.GetAllIsNotDeletedAsync();
+
+            productColorsDtos.ForEach(y => y.GeneralProductColorImages = _mapper.Map<List<GeneralPCIDto>>(productColorImages.Where(z => z.ProductColorId == y.Id).ToList()));
+
+            string imagePath = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/product/";
+
+            productColorsDtos.ForEach(y => y.GeneralProductColorImages.ForEach(z => z.ImageName = imagePath + z.ImageName));
 
             return Ok(productColorsDtos);
         }
@@ -70,13 +78,19 @@ namespace Ruper.API.Controllers
 
             var productColorsDtos = _mapper.Map<List<ProductColorDto>>(productColors);
 
-            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
-
             var products = await _productRepository.GetAllAsync();
             productColorsDtos.ForEach(x => x.ProductName = products.Where(y => y.Id == x.ProductId).FirstOrDefault().Name);
 
             var colors = await _ColorRepository.GetAllAsync();
             productColorsDtos.ForEach(x => x.ColorName = colors.Where(y => y.Id == x.ColorId).FirstOrDefault().ColorName);
+
+            var productColorImages = await _productColorImageRepository.GetAllIsNotDeletedAsync();
+
+            productColorsDtos.ForEach(y => y.GeneralProductColorImages = _mapper.Map<List<GeneralPCIDto>>(productColorImages.Where(z => z.ProductColorId == y.Id).ToList()));
+
+            string imagePath = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/product/";
+
+            productColorsDtos.ForEach(y => y.GeneralProductColorImages.ForEach(z => z.ImageName = imagePath + z.ImageName));
 
             return Ok(productColorsDtos);
         }
@@ -99,13 +113,19 @@ namespace Ruper.API.Controllers
 
             var productColorDto = _mapper.Map<ProductColorDto>(productColor);
 
-            //subCategoryDto.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/category/" + subCategoryDto.ImageName;
-
             var products = await _productRepository.GetAllAsync();
             productColorDto.ProductName = products.Where(y => y.Id == productColorDto.ProductId).FirstOrDefault().Name;
             
             var colors = await _ColorRepository.GetAllAsync();
             productColorDto.ColorName = colors.Where(y => y.Id == productColorDto.ColorId).FirstOrDefault().ColorName;
+
+            var productColorImages = await _productColorImageRepository.GetAllIsNotDeletedAsync();
+
+            productColorDto.GeneralProductColorImages = _mapper.Map<List<GeneralPCIDto>>(productColorImages.Where(z => z.ProductColorId == productColorDto.Id).ToList());
+
+            string imagePath = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/product/";
+
+            productColorDto.GeneralProductColorImages.ForEach(z => z.ImageName = imagePath + z.ImageName);
 
             return Ok(productColorDto);
         }
@@ -115,10 +135,6 @@ namespace Ruper.API.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            //var forderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "SubCategory");
-
-            //subCategoryCreateDto.ImageName = await subCategoryCreateDto.Image.GenerateFile(forderPath);
 
             var productColor = _mapper.Map<ProductColor>(productColorCreateDto);
 

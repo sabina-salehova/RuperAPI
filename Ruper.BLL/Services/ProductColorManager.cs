@@ -59,16 +59,15 @@ namespace Ruper.BLL.Services
 
             if (deletedEntity is null) throw new Exception();
 
-            // productImage-dan sonra duzelt
-            //var product = await _dbContext.Products.Where(x => x.SubCategoryId == id)
-            //                                                 .FirstOrDefaultAsync();
+            var images = await _dbContext.ProductColorImages.Where(x => x.ProductColorId == id).ToListAsync();
 
-            //if (product is not null) throw new Exception();
+            foreach (var image in images) 
+            {
+                var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "Product", image.ImageName);
 
-            //var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "SubCategory", deletedEntity.ImageName);
-
-            //if (File.Exists(path))
-            //    File.Delete(path);
+                if (File.Exists(path))
+                    File.Delete(path);
+            }
 
             _dbContext.Remove(deletedEntity);
             await _dbContext.SaveChangesAsync();
@@ -83,19 +82,6 @@ namespace Ruper.BLL.Services
             if (existPCUpdateDto is null) throw new Exception();
 
             if (productColorUpdateDto.Id != id) throw new Exception();
-
-            //if (subCategoryUpdateDto.Image is not null)
-            //{
-            //    var forderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "SubCategory");
-            //    var existImageName = Path.Combine(forderPath, existSubCategory.ImageName);
-
-            //    if (File.Exists(existImageName))
-            //        File.Delete(existImageName);
-
-            //    subCategoryUpdateDto.ImageName = await subCategoryUpdateDto.Image.GenerateFile(forderPath);
-
-            //}
-            //else subCategoryUpdateDto.ImageName = existSubCategory.ImageName;
 
             if (productColorUpdateDto.Quantity is null) productColorUpdateDto.Quantity = existPCUpdateDto.Quantity;
 
@@ -124,14 +110,6 @@ namespace Ruper.BLL.Services
             {
                 productColorUpdateDto.IsDeleted = existPCUpdateDto.IsDeleted;
             }
-            //else                   productImage-dan sonra duzelt
-            //{
-            //    var productColors = await _dbContext.Products
-            //        .Where(x => x.p == id && x.IsDeleted == false)
-            //        .FirstOrDefaultAsync();
-
-            //    if (subCategoryUpdateDto.IsDeleted == true && product != null) throw new Exception();
-            //}
 
             if (productColorUpdateDto.IsDeleted == false && color.IsDeleted == true) throw new Exception();
             if (productColorUpdateDto.IsDeleted == false && product.IsDeleted == true) throw new Exception();

@@ -18,5 +18,7 @@ namespace Ruper.BLL.Dtos
         public int ColorId { get; set; }
         public string ColorName { get; set; }
         public bool IsDeleted { get; set; }
+        public List<GeneralPCIDto>? GeneralProductColorImages { get; set; } = new List<GeneralPCIDto>();
+
     }
 }
