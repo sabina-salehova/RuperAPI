@@ -70,7 +70,17 @@ namespace Ruper.API.Controllers
             string imagePath = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/product/";
 
             generalProductsDtos.ForEach(x => x.GeneralProductColors
-                               .ForEach(y => y.GeneralProductColorImages.ForEach(z=>z.ImageName=imagePath+z.ImageName)));
+                               .ForEach(y => y.GeneralProductColorImages.ForEach(z => z.ImageName = imagePath + z.ImageName)));
+
+            List<string> images = new List<string>();
+            
+            generalProductsDtos.ForEach(x => {
+                images = new List<string>();
+                x.GeneralProductColors
+                .ForEach(y => y.GeneralProductColorImages
+                .ForEach(z => images.Add(z.ImageName)));
+                x.ImageName = images.FirstOrDefault();
+            });
 
             var colors = await _ColorRepository.GetAllAsync();
 
@@ -89,8 +99,6 @@ namespace Ruper.API.Controllers
                 return NotFound("Hele hec bir product yaradilmayib");
 
             var productsDtos = _mapper.Map<List<ProductDto>>(products);
-
-            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
 
             var brands = await _brandRepository.GetAllAsync();
             productsDtos.ForEach(x => x.BrandName = brands.Where(y => y.Id == x.BrandId).FirstOrDefault().Name);
@@ -115,8 +123,6 @@ namespace Ruper.API.Controllers
                 return NotFound("Hele hec bir delete olmayan product yaradilmayib");
 
             var productsDtos = _mapper.Map<List<ProductDto>>(products);
-
-            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
 
             var brands = await _brandRepository.GetAllAsync();
             productsDtos.ForEach(x => x.BrandName = brands.Where(y => y.Id == x.BrandId).FirstOrDefault().Name);
