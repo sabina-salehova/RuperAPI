@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ruper.AuthenticationService\Ruper.AuthenticationService.csproj" />
     <ProjectReference Include="..\Ruper.BLL\Ruper.BLL.csproj" />
   </ItemGroup>
 

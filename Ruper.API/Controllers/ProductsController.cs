@@ -72,7 +72,7 @@ namespace Ruper.API.Controllers
             generalProductsDtos.ForEach(x => x.GeneralProductColors
                                .ForEach(y => y.GeneralProductColorImages.ForEach(z => z.ImageName = imagePath + z.ImageName)));
 
-            List<string> images = new List<string>();
+            List<string> images;
             
             generalProductsDtos.ForEach(x => {
                 images = new List<string>();
