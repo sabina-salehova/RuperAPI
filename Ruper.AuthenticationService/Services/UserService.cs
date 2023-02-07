@@ -1,27 +1,34 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ruper.AuthenticationService.Models;
-using Ruper.AuthenticationService.Services;
+using Ruper.AuthenticationService.Services.Contracts;
 using Ruper.DAL.Constants;
+using Ruper.DAL.DataContext;
 using Ruper.DAL.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
+using static Ruper.DAL.Constants.Authorization;
 
-namespace Ruper.AuthenticationService
+namespace Ruper.AuthenticationService.Services
 {
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _dbContext;
         private readonly JWT _jwt;
 
-        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt)
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt, AppDbContext dbContext = null)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _jwt = jwt.Value;
+            _dbContext = dbContext;
         }
 
         public async Task<string> RegisterAsync(RegisterModel model)
@@ -128,7 +135,9 @@ namespace Ruper.AuthenticationService
             return $"Incorrect Credentials for user {user.Email}.";
 
         }
-
-
+        public async virtual Task<IList<ApplicationUser>> GetAllAsync()
+        {
+            return await _userManager.Users.AsNoTracking().ToListAsync();
+        }
     }
 }

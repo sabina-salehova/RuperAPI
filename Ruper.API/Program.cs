@@ -12,12 +12,12 @@ using Ruper.DAL.Entities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Ruper.AuthenticationService.Models;
-using Ruper.AuthenticationService.Services;
-using Ruper.AuthenticationService;
 using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Ruper.AuthenticationService.Services.Contracts;
+using Ruper.AuthenticationService.Services;
 
 namespace Ruper.API
 {
@@ -27,11 +27,8 @@ namespace Ruper.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
-
-            //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
-
+            
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Lockout.MaxFailedAccessAttempts = 2;
@@ -44,7 +41,7 @@ namespace Ruper.API
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
-            builder.Services.AddScoped<IUserService, UserService>();            
+                    
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
@@ -76,11 +73,6 @@ namespace Ruper.API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            //builder.Services.AddDbContext<AppDbContext>(options =>
-            //{
-            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            //});
             
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -91,15 +83,12 @@ namespace Ruper.API
                                   {
                                       policy.AllowAnyOrigin().AllowAnyMethod();
                                   });
-            });
-           
+            });           
 
             builder.Services.AddFluentValidation(x=>x.RegisterValidatorsFromAssembly(assembly:Assembly.GetExecutingAssembly()));
             
-            //builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JWT"));
-
             builder.Services.AddAutoMapper(typeof(MappingProfile));
-            //builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddDalServices();
             builder.Services.AddBllServices();
 
@@ -111,8 +100,6 @@ namespace Ruper.API
                 RequestPath = new PathString("/images"),
                 EnableDirectoryBrowsing = true
             });
-
-            
 
             // Configure the HTTP request pipeline.
 

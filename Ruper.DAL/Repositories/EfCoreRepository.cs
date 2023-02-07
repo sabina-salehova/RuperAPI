@@ -46,7 +46,8 @@ namespace Ruper.DAL.Repositories
 
         public async virtual Task DeleteAsync(T entity)
         {
-            //override edilib --> StudentManager
+            _dbContext.Set<T>().Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async virtual Task<IList<T>> GetAllAsync()

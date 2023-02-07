@@ -16,6 +16,8 @@ namespace Ruper.DAL.DataContext
             //Seed Default User
             var defaultUser = new ApplicationUser { UserName = Authorization.default_username, Email = Authorization.default_email, EmailConfirmed = true, PhoneNumberConfirmed = true };
 
+            var users = userManager.Users.ToList();
+
             if (userManager.Users.All(u => u.Id != defaultUser.Id))
             {
                 await userManager.CreateAsync(defaultUser, Authorization.default_password);
