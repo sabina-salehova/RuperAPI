@@ -29,7 +29,7 @@ namespace Ruper.API.Controllers
             _ratingService = ratingService;
         }
 
-        [HttpPost("Rate")]
+        [HttpPost("RateByUser")]
         [Authorize]
         public async Task<IActionResult> Post([FromForm] RatingWithoutUserDto ratingCreateDto)
         {
@@ -55,7 +55,6 @@ namespace Ruper.API.Controllers
             return BadRequest();
         }
 
-
         [HttpGet]
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Get()
@@ -74,6 +73,14 @@ namespace Ruper.API.Controllers
             ratingsDtos.ForEach(x => x.UserName = users.Where(y => y.Id == x.UserId).FirstOrDefault().UserName);
 
             return Ok(ratingsDtos);
+        }
+
+        [HttpDelete("completelyDeleteByAdministrator/{id?}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
+        {
+            await _ratingRepository.CompletelyDeleteAsync(id);
+            return Ok();
         }
     }
 }
