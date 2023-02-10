@@ -31,7 +31,7 @@ namespace Ruper.API.Controllers
 
         [HttpPost("Rate")]
         [Authorize]
-        public async Task<IActionResult> Post(RatingWithoutUserDto ratingCreateDto)
+        public async Task<IActionResult> Post([FromForm] RatingWithoutUserDto ratingCreateDto)
         {
 
             if (User.Identity.IsAuthenticated)
