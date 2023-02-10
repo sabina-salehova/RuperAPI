@@ -261,7 +261,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands");
+                    b.ToTable("Brands", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.Category", b =>
@@ -297,7 +297,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.Color", b =>
@@ -333,7 +333,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Colors");
+                    b.ToTable("Colors", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.Product", b =>
@@ -387,7 +387,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.ProductColor", b =>
@@ -432,7 +432,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductColors");
+                    b.ToTable("ProductColors", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.ProductColorImage", b =>
@@ -469,7 +469,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasIndex("ProductColorId");
 
-                    b.ToTable("ProductColorImages");
+                    b.ToTable("ProductColorImages", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.Rating", b =>
@@ -514,7 +514,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.Slider", b =>
@@ -562,7 +562,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders");
+                    b.ToTable("Sliders", (string)null);
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.SubCategory", b =>
@@ -603,7 +603,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategories");
+                    b.ToTable("SubCategories", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

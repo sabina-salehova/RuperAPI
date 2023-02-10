@@ -32,6 +32,6 @@ namespace Ruper.BLL.Dtos
         public string CategoryName { get; set; }
         public string? ImageName { get; set; }=string.Empty;
         public List<GeneralProductColorDto>? GeneralProductColors { get; set; }=new List<GeneralProductColorDto>();
-
+        public List<RatingDto>? ProductRatings { get; set; } = new List<RatingDto>();
     }
 }

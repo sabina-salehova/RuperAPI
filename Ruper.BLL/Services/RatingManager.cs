@@ -41,20 +41,27 @@ namespace Ruper.BLL.Services
 
             if (sameProductRateSameUser is not null) throw new Exception();
 
-            await base.AddAsync(entity);
+            var productRates= await _dbContext.Ratings
+                                    .Where(x => x.ProductId == entity.ProductId)
+                                    .ToListAsync();
+
+            double productRatesSum = entity.Rate;
+
+            if (productRates.Count > 0)
+            {                
+                await _dbContext.Ratings.Where(x => x.ProductId == entity.ProductId)
+                                        .ForEachAsync(y => productRatesSum += y.Rate);
+
+                product.Rate = (double)(productRatesSum / (productRates.Count+1));
+                _dbContext.Products.Update(product);
+            }
+            else if (productRates.Count == 0)
+            {
+                product.Rate = productRatesSum;
+                _dbContext.Products.Update(product);
+            }
+
+            await base.AddAsync(entity);                        
         }
-
-        //public override async Task CompletelyDeleteByUserAsync(int? id)
-        //{
-        //    if (id is null) throw new Exception();
-
-        //    var deletedEntity = await _dbContext.Ratings.FindAsync(id);
-
-        //    if (deletedEntity is null) throw new Exception();
-
-        //    _dbContext.Remove(deletedEntity);
-        //    await _dbContext.SaveChangesAsync();
-        //}
-
     }
 }

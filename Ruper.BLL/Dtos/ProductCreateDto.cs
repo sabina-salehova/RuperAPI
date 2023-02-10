@@ -14,7 +14,7 @@ namespace Ruper.BLL.Dtos
         [Required]
         public double Price { get; set; }
         public double? DisCount { get; set; }
-        public double? Rate { get; set; }
+        //public double? Rate { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }

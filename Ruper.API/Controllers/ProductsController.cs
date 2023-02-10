@@ -18,16 +18,14 @@ namespace Ruper.API.Controllers
         private readonly IRepository<Brand> _brandRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IProductService _productService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IRepository<ProductColor> _productColorRepository;
         private readonly IRepository<Color> _ColorRepository;
         private readonly IRepository<ProductColorImage> _productColorImageRepository;
-
-        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService, IRepository<ProductColor> productColorRepository, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository)
+        private readonly IRepository<Rating> _ratingRepository;
+        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService, IRepository<ProductColor> productColorRepository, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository, IRepository<Rating> ratingRepository)
         {
             _mapper = mapper;
             _subCategoryRepository = subCategoryRepository;
-            _webHostEnvironment = webHostEnvironment;
             _categoryRepository = categoryRepository;
             _brandRepository = brandRepository;
             _productRepository = productRepository;
@@ -35,6 +33,7 @@ namespace Ruper.API.Controllers
             _productColorRepository = productColorRepository;
             _ColorRepository = colorRepository;
             _productColorImageRepository = productColorImageRepository;
+            _ratingRepository = ratingRepository;
         }
 
         [HttpGet]
@@ -86,6 +85,14 @@ namespace Ruper.API.Controllers
 
             generalProductsDtos.ForEach(x => x.GeneralProductColors.ForEach(y => y.ColorName = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorName));
             generalProductsDtos.ForEach(x => x.GeneralProductColors.ForEach(y => y.ColorCode = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorCode));
+
+            var ratings = await _ratingRepository.GetAllAsync();
+
+            generalProductsDtos
+                .ForEach(x => x.ProductRatings = _mapper.
+                Map<List<RatingDto>>(ratings.
+                Where(y => y.ProductId == x.Id && !x.IsDeleted).
+                ToList()));
 
             return Ok(generalProductsDtos);
         }
@@ -183,6 +190,13 @@ namespace Ruper.API.Controllers
 
             productDto.GeneralProductColors.ForEach(y => y.ColorName = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorName);
             productDto.GeneralProductColors.ForEach(y => y.ColorCode = colors.Where(x => x.Id == y.ColorId).FirstOrDefault().ColorCode);
+
+            var ratings = await _ratingRepository.GetAllAsync();
+
+            productDto.ProductRatings= _mapper.
+                Map<List<RatingDto>>(ratings.
+                Where(y => y.ProductId == productDto.Id && !y.IsDeleted).
+                ToList());
 
             return Ok(productDto);
         }
