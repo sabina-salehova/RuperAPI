@@ -37,6 +37,8 @@ namespace Ruper.BLL
 
             services.AddScoped<IRatingService, RatingManager>();
 
+            services.AddScoped<IOrderService, OrderManager>();
+
             return services;
         }
     }

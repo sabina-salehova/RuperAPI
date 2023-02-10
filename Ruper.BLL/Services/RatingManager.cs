@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Ruper.BLL.Services.Contracts;
 using Ruper.DAL.DataContext;
 using Ruper.DAL.Entities;
@@ -12,15 +9,10 @@ namespace Ruper.BLL.Services
     public class RatingManager : EfCoreRepository<Rating> , IRatingService
     {
         private readonly AppDbContext _dbContext;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IMapper _mapper;
-        public RatingManager(AppDbContext dbContext, IWebHostEnvironment webHostEnvironment, IMapper mapper) : base(dbContext)
+        public RatingManager(AppDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
-            _webHostEnvironment = webHostEnvironment;
-            _mapper = mapper;
         }
-
 
         public override async Task AddAsync(Rating entity)
         {

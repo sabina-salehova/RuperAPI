@@ -48,6 +48,10 @@ namespace Ruper.BLL.Mapping
             CreateMap<Rating, RatingDto>().ReverseMap();
             CreateMap<Rating, RatingCreateDto>().ReverseMap();
             CreateMap<RatingCreateDto, RatingWithoutUserDto>().ReverseMap();
+
+            CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<Order, OrderCreateDto>().ReverseMap();
+            CreateMap<OrderCreateDto, OrderWithoutUserDto>().ReverseMap();
         }
     }
 }
