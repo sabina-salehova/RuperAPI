@@ -14,7 +14,15 @@ namespace Ruper.DAL.DataContext
             await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.User.ToString()));
 
             //Seed Default User
-            var defaultUser = new ApplicationUser { UserName = Authorization.default_username, Email = Authorization.default_email, EmailConfirmed = true, PhoneNumberConfirmed = true };
+            var defaultUser = new ApplicationUser 
+            { 
+                UserName = Authorization.default_username,
+                FirstName = Authorization.default_firstname,
+                LastName = Authorization.default_lastname,
+                Email = Authorization.default_email,
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true
+            };
 
             var users = userManager.Users.ToList();
 
