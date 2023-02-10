@@ -35,6 +35,8 @@ namespace Ruper.BLL
             services.AddScoped<IPCIService, PCIManager>();
             services.AddScoped<IValidator<PCICreateDto>, PCICreateDtoValidation>();
 
+            services.AddScoped<IRatingService, RatingManager>();
+
             return services;
         }
     }

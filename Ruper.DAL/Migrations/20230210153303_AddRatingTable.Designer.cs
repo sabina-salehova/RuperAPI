@@ -12,7 +12,7 @@ using Ruper.DAL.DataContext;
 namespace Ruper.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230209222147_AddRatingTable")]
+    [Migration("20230210153303_AddRatingTable")]
     partial class AddRatingTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -492,7 +492,6 @@ namespace Ruper.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -517,7 +516,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.Slider", b =>

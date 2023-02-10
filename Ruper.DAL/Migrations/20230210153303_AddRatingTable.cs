@@ -10,7 +10,7 @@ namespace Ruper.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Rating",
+                name: "Ratings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -18,7 +18,7 @@ namespace Ruper.DAL.Migrations
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Rate = table.Column<double>(type: "float", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -27,15 +27,15 @@ namespace Ruper.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rating", x => x.Id);
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Rating_AspNetUsers_UserId",
+                        name: "FK_Ratings_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Rating_Products_ProductId",
+                        name: "FK_Ratings_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -43,20 +43,20 @@ namespace Ruper.DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_ProductId",
-                table: "Rating",
+                name: "IX_Ratings_ProductId",
+                table: "Ratings",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_UserId",
-                table: "Rating",
+                name: "IX_Ratings_UserId",
+                table: "Ratings",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Rating");
+                name: "Ratings");
         }
     }
 }

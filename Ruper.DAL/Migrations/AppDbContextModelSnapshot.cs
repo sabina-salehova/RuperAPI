@@ -490,7 +490,6 @@ namespace Ruper.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -515,7 +514,7 @@ namespace Ruper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Ruper.DAL.Entities.Slider", b =>

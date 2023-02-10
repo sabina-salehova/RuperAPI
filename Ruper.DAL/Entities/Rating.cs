@@ -13,11 +13,11 @@ namespace Ruper.DAL.Entities
 
         [Required]
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         [Required]
         public double Rate { get; set; }
-        public string Message { get; set; }
-        public bool IsDeleted { get; set; }
+        public string? Message { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }
