@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Ruper.DAL.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ruper.BLL.Dtos
@@ -15,13 +14,5 @@ namespace Ruper.BLL.Dtos
 
         public bool IsDeleted = false;
         public int CategoryId { get; set; }
-
-        //[ForeignKey("CategoryId")]
-        //public Category Category { get;}
-        //public List<Category>? AllCategories { get; }
-
-        //public DateTime CreatedAt = DateTime.Now;
-
-        //public string CreatedBy = "Admin";
     }
 }

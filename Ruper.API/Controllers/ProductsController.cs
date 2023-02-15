@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Ruper.BLL.Data;
+using Ruper.AuthenticationService.Services.Contracts;
 using Ruper.BLL.Dtos;
 using Ruper.BLL.Services.Contracts;
 using Ruper.DAL.Entities;
@@ -22,7 +24,8 @@ namespace Ruper.API.Controllers
         private readonly IRepository<Color> _ColorRepository;
         private readonly IRepository<ProductColorImage> _productColorImageRepository;
         private readonly IRepository<Rating> _ratingRepository;
-        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService, IRepository<ProductColor> productColorRepository, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository, IRepository<Rating> ratingRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ProductsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IProductService productService, IRepository<ProductColor> productColorRepository, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository, IRepository<Rating> ratingRepository, UserManager<ApplicationUser> userManager)
         {
             _mapper = mapper;
             _subCategoryRepository = subCategoryRepository;
@@ -34,6 +37,7 @@ namespace Ruper.API.Controllers
             _ColorRepository = colorRepository;
             _productColorImageRepository = productColorImageRepository;
             _ratingRepository = ratingRepository;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -90,9 +94,17 @@ namespace Ruper.API.Controllers
 
             generalProductsDtos
                 .ForEach(x => x.ProductRatings = _mapper.
-                Map<List<RatingDto>>(ratings.
+                Map<List<GeneralRatingDto>>(ratings.
                 Where(y => y.ProductId == x.Id && !x.IsDeleted).
                 ToList()));
+
+            List<ApplicationUser> users = _userManager.Users.ToList();
+
+            generalProductsDtos
+                .ForEach(z=>z.ProductRatings
+                .ForEach(x => x.UserName = users
+                .Where(y => y.Id == x.UserId)
+                .FirstOrDefault().UserName));
 
             return Ok(generalProductsDtos);
         }
@@ -194,9 +206,24 @@ namespace Ruper.API.Controllers
             var ratings = await _ratingRepository.GetAllAsync();
 
             productDto.ProductRatings= _mapper.
-                Map<List<RatingDto>>(ratings.
+                Map<List<GeneralRatingDto>>(ratings.
                 Where(y => y.ProductId == productDto.Id && !y.IsDeleted).
                 ToList());
+
+            List<ApplicationUser> users = _userManager.Users.ToList();
+
+            productDto.ProductRatings
+                .ForEach(x => x.UserName = users
+                .Where(y => y.Id == x.UserId)
+                .FirstOrDefault().UserName);
+
+            List<string> images= new List<string>(); ;
+
+            productDto.GeneralProductColors
+                .ForEach(y => y.GeneralProductColorImages
+                .ForEach(z => images.Add(z.ImageName)));
+
+            productDto.ImageName = images.FirstOrDefault();
 
             return Ok(productDto);
         }
@@ -233,6 +260,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Post([FromForm] ProductCreateDto productCreateDto)
         {
             if (!ModelState.IsValid)
@@ -246,6 +274,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpPut("{id?}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Put([FromRoute] int? id, [FromForm] ProductUpdateDto productUpdateDto)
         {
             var products = await _productRepository.GetAllAsync();
@@ -259,6 +288,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpDelete("completelyDelete/{id?}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
         {
             await _productService.CompletelyDeleteAsync(id);

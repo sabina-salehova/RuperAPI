@@ -4,15 +4,11 @@ using Ruper.BLL;
 using Ruper.DAL.DataContext;
 using Ruper.DAL;
 using FluentValidation.AspNetCore;
-using Ruper.BLL.Dtos;
 using System.Reflection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Identity;
 using Ruper.DAL.Entities;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
 using Ruper.AuthenticationService.Models;
-using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -79,10 +75,13 @@ namespace Ruper.API
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  policy =>
-                                  {
-                                      policy.AllowAnyOrigin().AllowAnyMethod();
-                                  });
+                                    builder =>
+                                    {
+                                        builder.WithOrigins("http://localhost:3000/")
+                                        .AllowAnyOrigin()
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                                    });
             });           
 
             builder.Services.AddFluentValidation(x=>x.RegisterValidatorsFromAssembly(assembly:Assembly.GetExecutingAssembly()));

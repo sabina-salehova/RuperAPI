@@ -16,9 +16,5 @@ namespace Ruper.BLL.Dtos
         public string? ButtonName { get; set; }
         public string? ButtonLink { get; set; }
         public bool? IsDeleted { get; set; }
-
-        //public DateTime CreatedAt = DateTime.Now;
-
-        //public string CreatedBy = "Admin";
     }
 }

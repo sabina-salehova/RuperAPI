@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Ruper.BLL.Data;
 using Ruper.BLL.Dtos;
 using Ruper.BLL.Services.Contracts;
 using Ruper.DAL.Entities;
 using Ruper.DAL.Repositories.Contracts;
-using System.Drawing;
 using Color = Ruper.DAL.Entities.Color;
 
 namespace Ruper.API.Controllers
@@ -17,23 +14,15 @@ namespace Ruper.API.Controllers
     public class ProductColorsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IRepository<SubCategory> _subCategoryRepository;
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<Brand> _brandRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductColor> _productColorRepository;
         private readonly IRepository<Color> _ColorRepository;
         private readonly IProductColorService _productColorService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IRepository<ProductColorImage> _productColorImageRepository;
 
-        public ProductColorsController(IMapper mapper, IRepository<SubCategory> subCategoryRepository, IWebHostEnvironment webHostEnvironment, IRepository<Category> categoryRepository, IRepository<Brand> brandRepository, IRepository<Product> productRepository, IRepository<ProductColor> productColorRepository, IProductColorService productColorService, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository)
+        public ProductColorsController(IMapper mapper, IRepository<Product> productRepository, IRepository<ProductColor> productColorRepository, IProductColorService productColorService, IRepository<Color> colorRepository, IRepository<ProductColorImage> productColorImageRepository)
         {
             _mapper = mapper;
-            _subCategoryRepository = subCategoryRepository;
-            _webHostEnvironment = webHostEnvironment;
-            _categoryRepository = categoryRepository;
-            _brandRepository = brandRepository;
             _productRepository = productRepository;
             _productColorRepository = productColorRepository;
             _productColorService = productColorService;
@@ -131,6 +120,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Post([FromForm] ProductColorCreateDto productColorCreateDto)
         {
             if (!ModelState.IsValid)
@@ -159,6 +149,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpPut("{id?}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Put([FromRoute] int? id, [FromForm] ProductColorUpdateDto productColorUpdateDto)
         {
             var productColors = await _productColorRepository.GetAllAsync();
@@ -172,6 +163,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpDelete("completelyDelete/{id?}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
         {
             await _productColorService.CompletelyDeleteAsync(id);

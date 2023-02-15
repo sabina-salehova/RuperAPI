@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ruper.BLL.Data;
 using Ruper.BLL.Dtos;
@@ -67,6 +68,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Post(int? productColorId, [FromForm] List<IFormFile> files)
         {
             if (!ModelState.IsValid)
@@ -98,6 +100,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpDelete("completelyDelete/{id?}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CompletelyDelete([FromRoute] int? id)
         {
             await _productColorImageService.CompletelyDeleteAsync(id);

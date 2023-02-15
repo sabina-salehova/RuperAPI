@@ -11,10 +11,5 @@ namespace Ruper.BLL.Dtos
         public bool IsDeleted { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-
-        //[ForeignKey("CategoryId")]
-        //public Category Category { get; set; }
-
-
     }
 }

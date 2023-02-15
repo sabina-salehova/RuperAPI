@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Ruper.DAL.Entities;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Ruper.BLL.Dtos
 {
@@ -14,7 +11,6 @@ namespace Ruper.BLL.Dtos
         [Required]
         public double Price { get; set; }
         public double? DisCount { get; set; }
-        //public double? Rate { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }

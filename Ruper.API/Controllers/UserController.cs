@@ -2,13 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
 using Ruper.AuthenticationService.Models;
 using Ruper.AuthenticationService.Services.Contracts;
 using Ruper.BLL.Dtos;
 using Ruper.DAL.Entities;
 using System.Security.Claims;
-using static Ruper.DAL.Constants.Authorization;
 
 namespace Ruper.API.Controllers
 {
@@ -25,30 +23,29 @@ namespace Ruper.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterAsync(RegisterModel model)
+        public async Task<ActionResult> RegisterAsync([FromBody] RegisterModel model)
         {
-
             var result = await _userService.RegisterAsync(model);
             return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> GetTokenAsync(TokenRequestModel model)
+        public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequestModel model)
         {
             var result = await _userService.GetTokenAsync(model);
             return Ok(result);
         }
         
         [HttpPost("addrole")]
-        [Authorize(Roles = "Administator")]
-        public async Task<IActionResult> AddRoleAsync(AddRoleModel model)
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)
         {
             var result = await _userService.AddRoleAsync(model);
             return Ok(result);
         }
 
         [HttpGet("All")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userService.GetAllAsync();
@@ -61,7 +58,7 @@ namespace Ruper.API.Controllers
         }
 
         [HttpGet("getUserByToken")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> GetUserIdByToken()
         {
             if (User.Identity.IsAuthenticated)

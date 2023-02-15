@@ -39,7 +39,6 @@ namespace Ruper.BLL.Services
             }
 
             entity.Rate = 0;
-            //if (entity.Rate < 0 || entity.Rate > 5) throw new Exception();
 
             await base.AddAsync(entity);
         }
@@ -58,11 +57,6 @@ namespace Ruper.BLL.Services
 
             if (productColor is not null) throw new Exception();
 
-            //var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "SubCategory", deletedEntity.ImageName);
-
-            //if (File.Exists(path))
-            //    File.Delete(path);
-
             _dbContext.Remove(deletedEntity);
             await _dbContext.SaveChangesAsync();
         }
@@ -76,19 +70,6 @@ namespace Ruper.BLL.Services
             if (existProduct is null) throw new Exception();
 
             if (productUpdateDto.Id != id) throw new Exception();
-
-            //if (subCategoryUpdateDto.Image is not null)
-            //{
-            //    var forderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", "SubCategory");
-            //    var existImageName = Path.Combine(forderPath, existSubCategory.ImageName);
-
-            //    if (File.Exists(existImageName))
-            //        File.Delete(existImageName);
-
-            //    subCategoryUpdateDto.ImageName = await subCategoryUpdateDto.Image.GenerateFile(forderPath);
-
-            //}
-            //else subCategoryUpdateDto.ImageName = existSubCategory.ImageName;
 
             if (productUpdateDto.Name is null) productUpdateDto.Name = existProduct.Name;
 
@@ -150,8 +131,6 @@ namespace Ruper.BLL.Services
                 throw new Exception();
 
             var generalProductsDtos = _mapper.Map<List<GeneralProductDto>>(products);
-
-            //subCategoriesDtos.ForEach(x => x.ImageName = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/images/subcategory/" + x.ImageName);
 
             var brands = await _dbContext.Brands.ToListAsync();
             generalProductsDtos.ForEach(x => x.BrandName = brands.Where(y => y.Id == x.BrandId).FirstOrDefault().Name);

@@ -1,13 +1,11 @@
-﻿using Ruper.DAL.Entities;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Ruper.BLL.Dtos
 {
     public class ProductColorDto
     {
         public int Id { get; set; }
-        public string SKU { get; }
+        public string SKU { get; set; }
         public int Quantity { get; set; }
 
         [Required]

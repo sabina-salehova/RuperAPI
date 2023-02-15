@@ -44,9 +44,10 @@ namespace Ruper.BLL.Mapping
             CreateMap<ProductColorImage, PCICreateDto>().ReverseMap();
 
             CreateMap<ApplicationUser, UserDto>().ReverseMap();
-
+            
             CreateMap<Rating, RatingDto>().ReverseMap();
             CreateMap<Rating, RatingCreateDto>().ReverseMap();
+            CreateMap<Rating, GeneralRatingDto>().ReverseMap();
             CreateMap<RatingCreateDto, RatingWithoutUserDto>().ReverseMap();
 
             CreateMap<Order, OrderDto>().ReverseMap();

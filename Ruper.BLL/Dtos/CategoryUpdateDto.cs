@@ -13,9 +13,5 @@ namespace Ruper.BLL.Dtos
 
         public string? ImageName = string.Empty;
         public bool? IsDeleted { get; set; }
-
-        //public DateTime UpdatedAt = DateTime.Now;
-
-        //public string UpdatedBy = "Admin";
     }
 }

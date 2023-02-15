@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Ruper.BLL.Data;
 using Ruper.BLL.Dtos;
 using Ruper.BLL.Services.Contracts;
-using Ruper.DAL.Base;
 using Ruper.DAL.DataContext;
 using Ruper.DAL.Entities;
 using Ruper.DAL.Repositories;

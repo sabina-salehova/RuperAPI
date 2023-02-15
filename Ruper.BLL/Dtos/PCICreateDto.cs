@@ -15,9 +15,5 @@ namespace Ruper.BLL.Dtos
 
         [Required]
         public int ProductColorId { get; set; }
-
-        //public DateTime CreatedAt = DateTime.Now;
-
-        //public string CreatedBy = "Admin";
     }
 }
